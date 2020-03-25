@@ -12,21 +12,21 @@
 
 ## 路线图 Route Map
 
-[ ] 实现基于 PMD `XML` 的配置
-[ ] 优化分析速度，基于 LSP （语言服务器）实现
-[ ] 实现基于 `JSON` 灵活的配置
-    [ ] 支持配置 各个检查项的 错误等级/是否检测
-    [ ] 支持配置 忽略目录 文件
-    [ ] 支持生成 XML 配置 （用于 maven pmd plugin）
-    [ ] 支持生成 JOSN 配置智能提示 https://github.com/SchemaStore/schemastore pull request
+* [] 实现基于 PMD `XML` 的配置
+* [ ] 优化分析速度，基于 LSP （语言服务器）实现
+* [ ] 实现基于 `JSON` 灵活的配置
+  * [ ] 支持配置 各个检查项的 错误等级/是否检测
+  * [ ] 支持配置 忽略目录 文件
+  * [ ] 支持生成 XML 配置 （用于 maven pmd plugin）
+  * [ ] 支持生成 JOSN 配置智能提示 https://github.com/SchemaStore/schemastore pull request
 
-[ ] `pmd` `xml` configuration
-[ ] Optimize analysis speed, Base on VSCode LSP
-[ ] customize `json` configuration
-    [ ] config: each check item error level (e.g. error warn info)
-    [ ] config: ignore file or directory
-    [ ] generate XML config for maven-pmd-plugin
-    [ ] supper JOSN config smart suggest by pull request https://github.com/SchemaStore/schemastore pull request
+* [ ] `pmd` `xml` configuration
+* [ ] Optimize analysis speed, Base on VSCode LSP
+* [ ] customize `json` configuration
+    * [ ] config: each check item error level (e.g. error warn info)
+    * [ ] config: ignore file or directory
+    * [ ] generate XML config for maven-pmd-plugin
+    * [ ] supper JOSN config smart suggest by pull request https://github.com/SchemaStore/schemastore pull request
 
 ## Features
 
