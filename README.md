@@ -1,12 +1,36 @@
-# vscode Apex Pmd
+# VSCode P3C
 
-[![Build Status](https://travis-ci.org/ChuckJonas/vscode-apex-pmd.svg?branch=master)](https://travis-ci.org/ChuckJonas/vscode-apex-pmd)
+<!-- [![Build Status](https://travis-ci.org/ChuckJonas/vscode-apex-pmd.svg?branch=master)](https://travis-ci.org/ChuckJonas/vscode-apex-pmd) -->
 
-Allows you to run [Apex Static Analysis](https://pmd.github.io/latest/index.html) directly in vscode on apex & VisualForce files.
+[阿里巴巴Java编程规范 (P3C/阿里巴巴Java开发手册)][p3c-websit] VSCode 扩展
+
+[Alibaba Java Coding Guidelines][p3c-websit] VSCode implements
+
+## 基于 Based
+
+[ChuckJonas/vscode-apex-pmd](https://github.com/ChuckJonas/vscode-apex-pmd)
+
+## 路线图 Route Map
+
+[ ] 实现基于 PMD `XML` 的配置
+[ ] 优化分析速度，基于 LSP （语言服务器）实现
+[ ] 实现基于 `JSON` 灵活的配置
+    [ ] 支持配置 各个检查项的 错误等级/是否检测
+    [ ] 支持配置 忽略目录 文件
+    [ ] 支持生成 XML 配置 （用于 maven pmd plugin）
+    [ ] 支持生成 JOSN 配置智能提示 https://github.com/SchemaStore/schemastore pull request
+
+[ ] `pmd` `xml` configuration
+[ ] Optimize analysis speed, Base on VSCode LSP
+[ ] customize `json` configuration
+    [ ] config: each check item error level (e.g. error warn info)
+    [ ] config: ignore file or directory
+    [ ] generate XML config for maven-pmd-plugin
+    [ ] supper JOSN config smart suggest by pull request https://github.com/SchemaStore/schemastore pull request
 
 ## Features
 
-![Apex PMD](https://raw.githubusercontent.com/ChuckJonas/vscode-apex-pmd/master/images/apex-pmd.gif)
+<!-- ![Apex PMD](https://raw.githubusercontent.com/ChuckJonas/vscode-apex-pmd/master/images/apex-pmd.gif)
 
 ### Current actions Supported
 
@@ -19,11 +43,11 @@ Allows you to run [Apex Static Analysis](https://pmd.github.io/latest/index.html
 ## System Requirements
 
 - Must have JRE >= 1.7 installed and in path
-- See [PMD System Requirements](https://pmd.github.io/pmd-6.11.0/pmd_userdocs_installation.html#requirements) for more details
+- See [PMD System Requirements](https://pmd.github.io/pmd-6.11.0/pmd_userdocs_installation.html#requirements) for more details -->
 
 ## Configuration
 
-- `rulesets` (optional): set to override default ruleset (see "Defining your own ruleset" for more details)
+<!-- - `rulesets` (optional): set to override default ruleset (see "Defining your own ruleset" for more details)
 - `runOnFileOpen`: run every time a file is opened in vscode
 - `runOnFileSave`: run every time a file is saved
 - `priorityErrorThreshold`: Determines at what priority level 'errors' will be added. Anything less will be a warning or hint
@@ -49,7 +73,7 @@ NOTE: If you move away from the default ruleset in an sfdx project, make sure to
 
 ### Using custom rules written in Java
 
-If you want to use your own [custom rules](https://pmd.github.io/latest/pmd_userdocs_extending_writing_pmd_rules.html) from a jar file, then the jar file must be on the classpath. By default, the PMD folder and the workspace root folder are included in the classpath. You can add further folders using the `additionalClassPaths` setting.  This ["Hello world"](https://github.com/andrewgilbertsagecom/pmd-custom-rule-sample) example is a good starting place for beginners.
+If you want to use your own [custom rules](https://pmd.github.io/latest/pmd_userdocs_extending_writing_pmd_rules.html) from a jar file, then the jar file must be on the classpath. By default, the PMD folder and the workspace root folder are included in the classpath. You can add further folders using the `additionalClassPaths` setting.  This ["Hello world"](https://github.com/andrewgilbertsagecom/pmd-custom-rule-sample) example is a good starting place for beginners. -->
 
 ## Developing/Contributing
 
@@ -88,3 +112,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
 The full license (BSD-style) can be found in the [PMD repo](https://github.com/pmd/pmd/blob/master/LICENSE)
+
+[p3c-websit]: https://developer.aliyun.com/special/tech-java "P3C"
