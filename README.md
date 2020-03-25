@@ -6,13 +6,13 @@
 
 [Alibaba Java Coding Guidelines][p3c-websit] VSCode implements
 
-## 基于 Based
+## 基于 Based on
 
 [ChuckJonas/vscode-apex-pmd](https://github.com/ChuckJonas/vscode-apex-pmd)
 
 ## 路线图 Route Map
 
-* [] 实现基于 PMD `XML` 的配置
+* [ ] 实现基于 PMD `XML` 的配置
 * [ ] 优化分析速度，基于 LSP （语言服务器）实现
 * [ ] 实现基于 `JSON` 灵活的配置
   * [ ] 支持配置 各个检查项的 错误等级/是否检测
