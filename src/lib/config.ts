@@ -1,6 +1,9 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
+
+const DEFAULT_RULE_XML_NAME = 'p3c-ruleset.xml';
 
 export class Config {
     private _rulesetPath: string;
@@ -11,12 +14,15 @@ export class Config {
     public priorityWarnThreshold: number;
     public runOnFileOpen: boolean;
     public runOnFileSave: boolean;
+    public runWorkspaceOnActive: boolean;
     public showErrors: boolean;
     public showStdOut: boolean;
     public showStdErr: boolean;
     public enableCache: boolean;
     public additionalClassPaths: string[];
     public commandBufferSize: number;
+    public defaultWorkspaceRulesetXmlPath: string;
+    public defaultRulesetXmlPath: string;
 
     private _ctx: vscode.ExtensionContext;
 
@@ -30,22 +36,27 @@ export class Config {
     }
 
     public init() {
-    let config = vscode.workspace.getConfiguration('apexPMD');
+        let config = vscode.workspace.getConfiguration('vscodeP3C');
         // deprecated setting is left for backward compatibility
         this._rulesetPath = config.get('rulesetPath') as string;
         this.workspaceRootPath = getRootWorkspacePath();
         this.rulesets = config.get("rulesets") as string[];
-        this.pmdBinPath = config.get('pmdBinPath') as string;
+        // this.pmdBinPath = config.get('pmdBinPath') as string;
+        this.pmdBinPath = "";
         this.priorityErrorThreshold = config.get('priorityErrorThreshold') as number;
         this.priorityWarnThreshold = config.get('priorityWarnThreshold') as number;
         this.runOnFileOpen = config.get('runOnFileOpen') as boolean;
         this.runOnFileSave = config.get('runOnFileSave') as boolean;
+        this.runWorkspaceOnActive = config.get("runWorkspaceOnActive") as boolean;
         this.showErrors = config.get('showErrors') as boolean;
         this.showStdOut = config.get('showStdOut') as boolean;
         this.showStdErr = config.get('showStdErr') as boolean;
         this.enableCache = config.get('enableCache') as boolean;
-        this.additionalClassPaths = config.get('additionalClassPaths') as string[];
+        // this.additionalClassPaths = config.get('additionalClassPaths') as string[];
+        this.additionalClassPaths = [];
         this.commandBufferSize = config.get('commandBufferSize') as number;
+        this.defaultWorkspaceRulesetXmlPath = path.resolve(this.workspaceRootPath, DEFAULT_RULE_XML_NAME);
+        this.defaultRulesetXmlPath = this._ctx.asAbsolutePath(path.join('rulesets', DEFAULT_RULE_XML_NAME))
         this.resolvePaths();
     }
 
@@ -54,11 +65,16 @@ export class Config {
             this.rulesets = [];
         }
 
+        // 检测工作空间是否存在 p3c-ruleset.xml 有的话就使用
+        if (this.rulesets.length === 0 && fs.existsSync(this.defaultWorkspaceRulesetXmlPath)) {
+            this.rulesets.push(DEFAULT_RULE_XML_NAME);
+        }
+
         if (this.rulesets.length) {
             this.rulesets = this.rulesets.map((p) => {
                 let res = p;
                 if ('default' === res.toLowerCase()) {
-                    res = this._ctx.asAbsolutePath(path.join('rulesets', 'apex_ruleset.xml'));
+                    res = this.defaultRulesetXmlPath;
                 } else if (!path.isAbsolute(res) && this.workspaceRootPath) {
                     res = path.join(this.workspaceRootPath, res);
                 }
@@ -67,7 +83,7 @@ export class Config {
         }
 
         if (!this._rulesetPath && !this.rulesets.length) {
-            this._rulesetPath = this._ctx.asAbsolutePath(path.join('rulesets', 'apex_ruleset.xml'));
+            this._rulesetPath = this.defaultRulesetXmlPath;
         } else if (this._rulesetPath && !path.isAbsolute(this._rulesetPath) && this.workspaceRootPath) {
             //convert relative path to absolute
             this._rulesetPath = path.join(this.workspaceRootPath, this._rulesetPath);

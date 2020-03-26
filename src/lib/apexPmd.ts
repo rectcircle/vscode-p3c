@@ -7,6 +7,8 @@ import { Config } from './config';
 import { AppStatus } from './appStatus';
 import * as os from 'os';
 import { Options } from 'csv-parse';
+import { promisify } from 'util';
+
 
 const PMD_COLUMNS: (keyof PmdResult)[] = [
     'problem',
@@ -36,6 +38,8 @@ export class ApexPmd {
     private _additionalClassPaths: string[];
     private _workspaceRootPath: string;
     private _commandBufferSize: number;
+    private _defaultWorkspaceRulesetXmlPath: string;
+    private _defaultRulesetXmlPath: string;
 
     public constructor(outputChannel: vscode.OutputChannel, config: Config) {
         this._rulesets = this.getValidRulesetPaths(config.rulesets);
@@ -50,6 +54,8 @@ export class ApexPmd {
         this._enableCache = config.enableCache;
         this._additionalClassPaths = config.additionalClassPaths;
         this._commandBufferSize = config.commandBufferSize;
+        this._defaultWorkspaceRulesetXmlPath = config.defaultWorkspaceRulesetXmlPath;
+        this._defaultRulesetXmlPath = config.defaultRulesetXmlPath;
     }
 
     public updateConfiguration(config: Config) {
@@ -66,6 +72,12 @@ export class ApexPmd {
     }
 
     public async run(targetPath: string, collection: vscode.DiagnosticCollection, progress?: vscode.Progress<{ message?: string; increment?: number; }>, token?: vscode.CancellationToken): Promise<void> {
+        // 只检测当前工作内部的文件
+        if (!targetPath.startsWith(this._workspaceRootPath)) {
+            this._outputChannel.appendLine(`Skip ${targetPath}: Only check workspace file`);
+            return;
+        }
+
         this._outputChannel.appendLine(`Analyzing ${targetPath}`);
         AppStatus.getInstance().thinking();
 
@@ -123,6 +135,32 @@ export class ApexPmd {
 
     }
 
+    public async createPmdRuleXmlFile()  {
+        let needGenerate = true;
+        if (await promisify(fs.exists)(this._defaultWorkspaceRulesetXmlPath)){
+            needGenerate = await vscode.window.showWarningMessage(
+                `File ${this._defaultWorkspaceRulesetXmlPath} has exists, What do you want to do?`,
+                'Overwrite', 'Cancel'
+            ) === 'Overwrite';
+        }
+        if (needGenerate) {
+            const target = vscode.Uri.file(this._defaultWorkspaceRulesetXmlPath);
+            await vscode.workspace.fs.copy(
+                vscode.Uri.file(this._defaultRulesetXmlPath),
+                target,
+                {
+                    overwrite: true
+                }
+            );
+            const textDocument = await vscode.workspace.openTextDocument(target);
+            await vscode.window.showTextDocument(textDocument, {
+                preview: false // 常驻而不是可以被覆盖
+            });
+            return true;
+        }
+        return false;
+    }
+
     getRulesets() {
         return this._rulesets;
     }
@@ -136,7 +174,7 @@ export class ApexPmd {
         if (this._rulesets.length) {
             return true;
         }
-        vscode.window.showErrorMessage(`No valid Ruleset paths found in "apexPMD.rulesets". Ensure configuration correct or change back to the default.`);
+        vscode.window.showErrorMessage(`No valid Ruleset paths found in "vscode-p3c.rulesets". Ensure configuration correct or change back to the default.`);
         return false;
     }
 
@@ -158,12 +196,15 @@ export class ApexPmd {
             ...this._additionalClassPaths
         ].join(CLASSPATH_DELM);
 
-        const cmd = `java -cp "${classPath}" net.sourceforge.pmd.PMD ${pmdKeys}`;
+        const cmd = `java -Dfile.encoding=utf-8 -cp "${classPath}" net.sourceforge.pmd.PMD ${pmdKeys}`;
 
         if (this._showStdOut) this._outputChannel.appendLine('PMD Command: ' + cmd);
 
         let pmdCmd = ChildProcess.exec(cmd,
-            { maxBuffer: Math.max(this._commandBufferSize, 1) * 1024 * 1024 });
+            {
+                encoding: 'UTF-8',
+                maxBuffer: Math.max(this._commandBufferSize, 1) * 1024 * 1024
+            });
 
         token && token.onCancellationRequested(() => {
             pmdCmd.kill();
@@ -253,7 +294,9 @@ export class ApexPmd {
     createDiagnostic(result: PmdResult): vscode.Diagnostic {
         let lineNum = parseInt(result.line) - 1;
 
-        let uri = `https://pmd.github.io/latest/pmd_rules_apex_${result.ruleSet.split(' ').join('').toLowerCase()}.html#${result.rule.toLowerCase()}`;
+        // let uri = `https://pmd.github.io/latest/pmd_rules_apex_${result.ruleSet.split(' ').join('').toLowerCase()}.html#${result.rule.toLowerCase()}`;
+        // TODO URL 实现
+        let uri = 'https://github.com/alibaba/p3c/tree/master/p3c-pmd/src/main/resources/rulesets/java';
         let msg = `${result.description} (rule: ${result.ruleSet}-${result.rule})`;
 
         let priority = parseInt(result.priority);
@@ -274,7 +317,7 @@ export class ApexPmd {
             level
         );
         problem.code = {target: vscode.Uri.parse(uri), value: result.rule};
-        problem.source = 'apex pmd';
+        problem.source = 'Java P3C Checker';
         return problem;
     }
 

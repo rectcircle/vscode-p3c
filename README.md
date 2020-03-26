@@ -8,20 +8,27 @@
 
 ## 基于 Based on
 
-[ChuckJonas/vscode-apex-pmd](https://github.com/ChuckJonas/vscode-apex-pmd)
+* [ChuckJonas/vscode-apex-pmd](https://github.com/ChuckJonas/vscode-apex-pmd)
+* [p3c-pmd](https://github.com/alibaba/p3c/tree/master/p3c-pmd)
 
 ## 路线图 Route Map
 
-* [ ] 实现基于 PMD `XML` 的配置
-* [ ] 优化分析速度，基于 LSP （语言服务器）实现
+* [x] 实现基于 PMD `XML` 的配置
+* [ ] ~~优化分析速度，基于 LSP （语言服务器）实现~~
+* [ ] 细节优化
+  * [ ] 支持中英双语
+  * [ ] 支持自定义 fat `p3c-pmd.jar`
 * [ ] 实现基于 `JSON` 灵活的配置
   * [ ] 支持配置 各个检查项的 错误等级/是否检测
   * [ ] 支持配置 忽略目录 文件
   * [ ] 支持生成 XML 配置 （用于 maven pmd plugin）
   * [ ] 支持生成 JOSN 配置智能提示 https://github.com/SchemaStore/schemastore pull request
 
-* [ ] `pmd` `xml` configuration
-* [ ] Optimize analysis speed, Base on VSCode LSP
+* [x] `pmd` `xml` configuration
+* [ ] ~~Optimize analysis speed, Base on VSCode LSP~~
+* [ ] detail optimization
+  * [ ] support chinese and english language
+  * [ ] support fat `p3c-pmd.jar` config
 * [ ] customize `json` configuration
     * [ ] config: each check item error level (e.g. error warn info)
     * [ ] config: ignore file or directory
@@ -45,17 +52,29 @@
 - Must have JRE >= 1.7 installed and in path
 - See [PMD System Requirements](https://pmd.github.io/pmd-6.11.0/pmd_userdocs_installation.html#requirements) for more details -->
 
+开箱即用的 P3C 代码规约检查，同时支持灵活配置。
+
+Out-of-the-box P3C code protocol checking, while supporting flexible configuration.
+
+创建配置文件 `>Java P3C Checker: Create PMD RUle XML File`，这个XML文件的语法参见 https://pmd.github.io/
+
+Create configuration file `>Java P3C Checker: Create PMD Rule XML File`, the XML file syntax to see https://pmd.github.io/
+
 ## Configuration
 
-<!-- - `rulesets` (optional): set to override default ruleset (see "Defining your own ruleset" for more details)
-- `runOnFileOpen`: run every time a file is opened in vscode
-- `runOnFileSave`: run every time a file is saved
-- `priorityErrorThreshold`: Determines at what priority level 'errors' will be added. Anything less will be a warning or hint
-- `priorityWarnThreshold`: Determines at what priority level 'warnings' will be added. Anything less will be a hint
-- `enableCache`: Creates a cache file for PMD to run faster. Will create a .pmdCache file in your workspace
-- `pmdBinPath` (prev. `pmdPath`) (optional): set to override the default pmd binaries. This should point to the PMD folder which contains folders `lib` and `bin`. Most likely it is called `libexec`.
-- `additionalClassPaths` (optional): set of paths to be appended to classpath. Used to find jar files containing custom rule definitions. Can be absolute or relative to workspace.
-- `commandBufferSize` Size of buffer used to collect PMD command output (MB), may need to be increased for very large projects
+* `rulesets` (optional): set to override default ruleset (see "Defining your own ruleset" for more details)
+* `runOnFileOpen`: run every time a file is opened in vscode
+* `runOnFileSave`: run every time a file is saved
+* `runWorkspaceOnActive` Will run once workspace checker on vscode started
+* `priorityErrorThreshold`: Determines at what priority level 'errors' will be added. Anything less will be a warning or hint
+* `priorityWarnThreshold`: Determines at what priority level 'warnings' will be added. Anything less will be a hint
+* `showErrors`: Show errors in output window
+* `showStdOut`: Show showStdOut in output window
+* `enableCache`: Creates a cache file for PMD to run faster. Will create a .pmdCache file in your workspace
+* `additionalClassPaths` (optional): set of paths to be appended to classpath. Used to find jar files containing custom rule definitions. Can be absolute or relative to workspace.
+* `commandBufferSize` Size of buffer used to collect PMD command output (MB), may need to be increased for very large projects
+
+<!-- 
 
 ### Defining your own "Ruleset"
 
@@ -83,11 +102,11 @@ If you want to use your own [custom rules](https://pmd.github.io/latest/pmd_user
 1. `npm install`
 1. debug -> "launch extension"
 
-### Upgrading PMD
+<!-- ### Upgrading PMD
 
 `npm run update-pmd`
 
-Any pull request submitted with updates to PMD MUST BE "CHECKSUMED"!
+Any pull request submitted with updates to PMD MUST BE "CHECKSUMED"! -->
 
 ## Legal Stuff
 

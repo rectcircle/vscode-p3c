@@ -7,12 +7,12 @@ import { AppStatus } from './lib/appStatus';
 
 export { ApexPmd };
 
-const supportedLanguageCodes = ['apex', 'visualforce'];
+const supportedLanguageCodes = ['java'];
 const isSupportedLanguage = (langCode: string) => 0 <= supportedLanguageCodes.indexOf(langCode);
 
-const appName = 'Apex PMD';
-const settingsNamespace = 'apexPMD';
-const collection = vscode.languages.createDiagnosticCollection('apex-pmd');
+const appName = 'Java P3C Checker';
+const settingsNamespace = 'vscodeP3C';
+const collection = vscode.languages.createDiagnosticCollection('vscode-p3c');
 const outputChannel = vscode.window.createOutputChannel(appName);
 
 export function activate(context: vscode.ExtensionContext) {
@@ -26,14 +26,14 @@ export function activate(context: vscode.ExtensionContext) {
     AppStatus.getInstance().ok();
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('apex-pmd.clearProblems', () => {
+        vscode.commands.registerCommand('vscode-p3c.clearProblems', () => {
             collection.clear();
         })
     );
 
     //setup commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('apex-pmd.runWorkspace', () => {
+        vscode.commands.registerCommand('vscode-p3c.runWorkspace', () => {
             vscode.window.withProgress({
                 location: vscode.ProgressLocation.Notification,
                 title: "Running Static Analysis on workspace",
@@ -46,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('apex-pmd.runFile', (fileName: string) => {
+        vscode.commands.registerCommand('vscode-p3c.runFile', (fileName: string) => {
             if (!fileName) {
                 fileName = vscode.window.activeTextEditor.document.fileName;
             }
@@ -54,11 +54,20 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    context.subscriptions.push(
+        vscode.commands.registerCommand('vscode-p3c.createPmdRuleXmlFile', async () => {
+            if (await pmd.createPmdRuleXmlFile()) {
+                config.init();
+                return pmd.updateConfiguration(config);
+            }
+        })
+    );
+
     //setup listeners
     if (config.runOnFileSave) {
         vscode.workspace.onDidSaveTextDocument((textDocument) => {
             if(isSupportedLanguage(textDocument.languageId)){
-              return vscode.commands.executeCommand('apex-pmd.runFile', textDocument.fileName);
+              return vscode.commands.executeCommand('vscode-p3c.runFile', textDocument.fileName);
             }
         });
     }
@@ -66,7 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (config.runOnFileOpen) {
         vscode.window.onDidChangeActiveTextEditor((editor) => {
             if(isSupportedLanguage(editor.document.languageId)){
-                return vscode.commands.executeCommand('apex-pmd.runFile', editor.document.fileName);
+                return vscode.commands.executeCommand('vscode-p3c.runFile', editor.document.fileName);
             }
         });
     }
@@ -86,6 +95,17 @@ export function activate(context: vscode.ExtensionContext) {
             AppStatus.getInstance().hide();
         }
     }));
+
+    // 检测第一次打开的文件
+    let initDocument = vscode.window.activeTextEditor.document;
+    if (config.runWorkspaceOnActive === false && isSupportedLanguage(initDocument.languageId)) {
+        vscode.commands.executeCommand('vscode-p3c.runFile', initDocument.fileName);
+    }
+    
+    // 第一次启动检测工作空间
+    if (config.runWorkspaceOnActive) {
+        vscode.commands.executeCommand('vscode-p3c.runWorkspace');
+    }
 }
 
 export function deactivate() { }

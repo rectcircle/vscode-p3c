@@ -1,32 +1,35 @@
 {
-  "name": "apex-pmd",
-  "displayName": "Apex PMD",
-  "description": "PMD static analysis for Salesforce Apex",
-  "version": "0.4.9",
-  "publisher": "chuckjonas",
+  "name": "vscode-p3c",
+  "displayName": "Java P3C Checker",
+  "preview": true,
+  "description": "阿里巴巴Java编程规范 (P3C/阿里巴巴Java开发手册) 规约检查 Alibaba Java Coding Guidelines Check",
+  "version": "0.1.0",
+  "publisher": "Rectcircle",
   "author": {
-    "name": "Charlie Jonas",
-    "email": "charlie@callawaycloudconsulting.com"
+    "name": "Rectcircle",
+    "email": "rectcircle96@gmail.com",
+    "url": "https://www.rectcircle.cn"
   },
   "engines": {
     "vscode": "^1.43.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ChuckJonas/vscode-apex-pmd.git"
+    "url": "https://github.com/rectcircle/vscode-p3c.git"
   },
   "bugs": {
-    "url": "https://github.com/ChuckJonas/vscode-apex-pmd/issues"
+    "url": "https://github.com/rectcircle/vscode-p3c/issues"
   },
-  "icon": "images/vscode-apex-pmd.png",
+  "icon": "images/vscode-p3c.png",
   "categories": [
     "Linters"
   ],
   "keywords": [
-    "Salesforce",
-    "Apex",
-    "Static Analysis",
-    "PMD"
+    "PMD",
+    "Checeker",
+    "Lint",
+    "Java",
+    "P3C"
   ],
   "activationEvents": [
     "*"
@@ -35,55 +38,31 @@
   "contributes": {
     "commands": [
       {
-        "command": "apex-pmd.runWorkspace",
+        "command": "vscode-p3c.runWorkspace",
         "title": "On Workspace",
-        "category": "Apex Static Analysis"
+        "category": "Java P3C Checker"
       },
       {
-        "command": "apex-pmd.runFile",
+        "command": "vscode-p3c.runFile",
         "title": "On File",
-        "category": "Apex Static Analysis"
+        "category": "Java P3C Checker"
       },
       {
-        "command": "apex-pmd.clearProblems",
+        "command": "vscode-p3c.clearProblems",
         "title": "Clear Problems",
-        "category": "Apex Static Analysis"
-      }
-    ],
-    "languages": [
-      {
-        "id": "apex",
-        "extensions": [
-          ".apxc",
-          ".cls",
-          ".trigger"
-        ],
-        "aliases": [
-          "Apex"
-        ]
+        "category": "Java P3C Checker"
       },
       {
-        "id": "visualforce",
-        "extensions": [
-          ".page",
-          ".component"
-        ],
-        "aliases": [
-          "VisualForce",
-          "Visualforce"
-        ]
+        "command": "vscode-p3c.createPmdRuleXmlFile",
+        "title": "Create PMD Rule XML File",
+        "category": "Java P3C Checker"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Apex PMD configuration",
+      "title": "Alibaba P3C Configuration",
       "properties": {
-        "apexPMD.pmdBinPath": {
-          "type": "string",
-          "default": "",
-          "description": "(Optional) Path to where PMD was installed"
-        },
-        "apexPMD.rulesets": {
+        "vscodeP3C.rulesets": {
           "type": "array",
           "items": {
             "type": "string"
@@ -91,55 +70,52 @@
           "default": [],
           "description": "(Optional) Paths to rulesets' xml files."
         },
-        "apexPMD.runOnFileOpen": {
-          "type": "boolean",
-          "default": false,
-          "description": "Will run static analysis every time a file is opened"
-        },
-        "apexPMD.runOnFileSave": {
+        "vscodeP3C.runOnFileOpen": {
           "type": "boolean",
           "default": true,
-          "description": "Will run static analysis every time a file is saved"
+          "description": "Will run checker every time a file is opened"
         },
-        "apexPMD.priorityErrorThreshold": {
+        "vscodeP3C.runOnFileSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Will run checker every time a file is saved"
+        },
+        "vscodeP3C.runWorkspaceOnActive": {
+            "type": "boolean",
+            "default": true,
+            "description": "Will run once workspace checker on vscode started"
+        },
+        "vscodeP3C.priorityErrorThreshold": {
           "type": "number",
           "default": 1,
           "description": "Determines at what priority level 'errors' will be added. Anything less will be a warning or hint"
         },
-        "apexPMD.priorityWarnThreshold": {
+        "vscodeP3C.priorityWarnThreshold": {
           "type": "number",
           "default": 3,
           "description": "Determines at what priority level 'warnings' will be added. Anything less will be a hint"
         },
-        "apexPMD.showErrors": {
+        "vscodeP3C.showErrors": {
           "type": "boolean",
           "default": true,
           "description": "Show errors in output window"
         },
-        "apexPMD.showStdOut": {
+        "vscodeP3C.showStdOut": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Show showStdOut in output window"
         },
-        "apexPMD.showStdErr": {
+        "vscodeP3C.showStdErr": {
           "type": "boolean",
           "default": true,
           "description": "Show showStdErr in output window"
         },
-        "apexPMD.enableCache": {
+        "vscodeP3C.enableCache": {
           "type": "boolean",
           "default": false,
           "description": "Creates a cache file for PMD to run faster. Will create a .pmdCache file in your workspace"
         },
-        "apexPMD.additionalClassPaths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [],
-          "description": "(Optional) paths to be appended to classpath. Used to find jar files containing custom rule definitions. Can be absolute or relative to workspace."
-        },
-        "apexPMD.commandBufferSize": {
+        "vscodeP3C.commandBufferSize": {
           "type": "number",
           "default": "64",
           "description": "Size of buffer used to collect PMD command output (MB), may need to be increased for very large projects"
@@ -149,16 +125,16 @@
     "menus": {
       "explorer/context": [
         {
-          "when": "resourceLangId == 'apex'",
-          "command": "apex-pmd.runFile",
-          "group": "apex-pmd"
+          "when": "resourceLangId == 'java'",
+          "command": "vscode-p3c.runFile",
+          "group": "vscode-p3c"
         }
       ],
       "editor/context": [
         {
-          "when": "resourceLangId == 'apex'",
-          "command": "apex-pmd.runFile",
-          "group": "apex-pmd"
+          "when": "resourceLangId == 'java'",
+          "command": "vscode-p3c.runFile",
+          "group": "vscode-p3c"
         }
       ]
     }

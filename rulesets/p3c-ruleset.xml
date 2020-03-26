@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<ruleset name="DwautoJavaRule" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>阿里巴巴开发手册规则配置</description>
+    <!-- 配置忽略检查的路径，注意以绝对路径匹配，语法为正则表达式 -->
+    <exclude-pattern>.*/\.mvn/.*</exclude-pattern>
+    <exclude-pattern>.*/target/.*</exclude-pattern>
+    <exclude-pattern>.*/src/test/.*</exclude-pattern>
+    <rule ref="rulesets/java/ali-comment.xml">
+        <!-- 配置忽略检查的规则 -->
+        <!-- https://github.com/alibaba/p3c/tree/master/p3c-pmd/src/main/resources/rulesets/java -->
+        <!-- <exclude name="CallSuperLast" /> -->
+    </rule>
+    <rule ref="rulesets/java/ali-concurrent.xml"></rule>
+    <rule ref="rulesets/java/ali-constant.xml"></rule>
+    <rule ref="rulesets/java/ali-exception.xml"></rule>
+    <rule ref="rulesets/java/ali-flowcontrol.xml"></rule>
+    <rule ref="rulesets/java/ali-naming.xml"></rule>
+    <rule ref="rulesets/java/ali-oop.xml"></rule>
+    <rule ref="rulesets/java/ali-orm.xml"></rule>
+    <rule ref="rulesets/java/ali-other.xml"></rule>
+    <rule ref="rulesets/java/ali-set.xml"></rule>
+</ruleset>

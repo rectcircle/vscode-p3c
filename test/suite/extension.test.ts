@@ -15,18 +15,18 @@ import { Config } from '../../src/lib/config';
 
 
 const PMD_PATH = path.join(__dirname, '..', '..', '..', 'bin', 'pmd');
-const RULESET_PATH = path.join(__dirname, '..', '..', '..', 'rulesets', 'apex_ruleset.xml');
+const RULESET_PATH = path.join(__dirname, '..', '..', '..', 'rulesets', 'p3c-ruleset.xml');
 const INVALID_RULESET_PATH = path.join(__dirname, '..', '..', '..', 'rulesets', 'apex_ruleset_invalid.xml');
-const TEST_APEX_PATH = path.join(__dirname, '..', '..', '..', 'test', 'assets', 'test.cls');
+const TEST_APEX_PATH = path.join(__dirname, '..', '..', '..', 'test', 'assets', 'App.java');
 
 suite("Extension Tests", () => {
 
     test("check default paths", () => {
-        const outputChannel = vscode.window.createOutputChannel('Apex PMD');
+        const outputChannel = vscode.window.createOutputChannel('Java P3C Checker');
 
         const config = new Config();
         config.pmdBinPath = PMD_PATH;
-        config.rulesets = [RULESET_PATH, INVALID_RULESET_PATH];
+        config.rulesets = [RULESET_PATH];
         config.priorityErrorThreshold = 3;
         config.priorityWarnThreshold = 1;
         config.showErrors = false;
@@ -49,8 +49,8 @@ suite("Extension Tests", () => {
     test("test diagnostic warning", function(done) {
         this.timeout(100000);
 
-        const collection = vscode.languages.createDiagnosticCollection('apex-pmd-test');
-        const outputChannel = vscode.window.createOutputChannel('Apex PMD');
+        const collection = vscode.languages.createDiagnosticCollection('vscode-p3c-test');
+        const outputChannel = vscode.window.createOutputChannel('Java P3C Checker');
 
         const config = new Config();
         config.pmdBinPath = PMD_PATH;
@@ -72,7 +72,7 @@ suite("Extension Tests", () => {
         let testApexUri = vscode.Uri.file(TEST_APEX_PATH);
         pmd.run(TEST_APEX_PATH, collection).then(()=>{
             let errs = collection.get(testApexUri);
-            assert.equal(errs.length, 1);
+            assert.equal(errs.length, 2);
             done();
         }).catch(e => {
             assert.fail(e);
