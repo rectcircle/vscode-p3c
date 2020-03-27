@@ -18,6 +18,7 @@
 * [ ] 细节优化
   * [ ] 支持中英双语
   * [ ] 支持自定义 fat `p3c-pmd.jar`
+* [ ] 支持 Quick fix
 * [ ] 实现基于 `JSON` 灵活的配置
   * [ ] 支持配置 各个检查项的 错误等级/是否检测
   * [ ] 支持配置 忽略目录 文件
@@ -29,6 +30,7 @@
 * [ ] detail optimization
   * [ ] support chinese and english language
   * [ ] support fat `p3c-pmd.jar` config
+* [ ] support Quick fix
 * [ ] customize `json` configuration
     * [ ] config: each check item error level (e.g. error warn info)
     * [ ] config: ignore file or directory

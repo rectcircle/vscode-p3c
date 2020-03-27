@@ -32,7 +32,7 @@
     "P3C"
   ],
   "activationEvents": [
-    "*"
+    "onLanguage:java"
   ],
   "main": "./out/src/extension",
   "contributes": {
