@@ -3,7 +3,7 @@
   "displayName": "Java P3C Checker",
   "preview": true,
   "description": "阿里巴巴Java编程规范 (P3C/阿里巴巴Java开发手册) 规约检查 Alibaba Java Coding Guidelines Check",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "Rectcircle",
   "author": {
     "name": "Rectcircle",
